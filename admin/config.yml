@@ -2,15 +2,22 @@ backend:
   name: git-gateway
   repo: TC-sudo-dps/my-blog
   branch: main
-media_folder: "images" 
+
+media_folder: "images"
 public_folder: "/images"
 
 collections:
   - name: "blog"
     label: "我的文章"
-    folder: "posts" # 文章會存放在這裡
+    folder: "posts"
     create: true
     fields:
       - {label: "標題", name: "title", widget: "string"}
       - {label: "日期", name: "date", widget: "datetime"}
+      # --- 更新後的分類清單 ---
+      - label: "分類"
+        name: "category"
+        widget: "select"
+        options: ["資安競賽", "生活", "程式解題", "筆記"]
+      # ----------------------
       - {label: "內容", name: "body", widget: "markdown"}
