@@ -1,8 +1,7 @@
 backend:
-  name: github
-  repo: TC-sudo-dps/my-blog # 這裡一定要改對
+  name: git-gateway
+  repo: TC-sudo-dps/my-blog
   branch: main
-
 media_folder: "images" 
 public_folder: "/images"
 
