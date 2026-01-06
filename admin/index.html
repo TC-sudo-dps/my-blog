@@ -1,12 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>管理員後台</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <title>TC Blog | 後台管理</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00d2ff; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); padding: 40px 5%; }
+        .container { max-width: 800px; margin: 0 auto; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: var(--primary); text-align: center; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; 
+        }
+        textarea { height: 400px; font-family: 'Courier New', monospace; line-height: 1.6; }
+        .hint { font-size: 0.85rem; color: #94a3b8; margin-bottom: 10px; }
+        button { 
+            width: 100%; padding: 15px; background: var(--primary); border: none; 
+            color: #0f172a; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+    </style>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<div class="container">
+    <h1>撰寫新文章</h1>
+    <input type="text" id="title" placeholder="文章標題">
+    <select id="category">
+        <option value="技術">技術</option>
+        <option value="資安">資安</option>
+        <option value="生活">生活</option>
+        <option value="隨筆">隨筆</option>
+    </select>
+    <div class="hint">💡 支援 Ctrl + V 直接貼上剪貼簿圖片</div>
+    <textarea id="content" placeholder="使用 Markdown 撰寫內容..."></textarea>
+    <button onclick="publishPost()">發佈文章 (需配置 GitHub Token)</button>
+</div>
+
+<script>
+    const contentArea = document.getElementById('content');
+
+    // --- 核心功能：Ctrl + V 貼圖處理 ---
+    contentArea.addEventListener('paste', function (e) {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        
+        for (let item of items) {
+            if (item.type.indexOf('image') !== -1) {
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                
+                reader.onload = function (event) {
+                    const base64Data = event.target.result;
+                    const imgMarkdown = `\n![圖片描述](${base64Data})\n`;
+                    
+                    // 插入到當前游標位置
+                    const start = contentArea.selectionStart;
+                    const end = contentArea.selectionEnd;
+                    contentArea.value = contentArea.value.substring(0, start) 
+                                        + imgMarkdown 
+                                        + contentArea.value.substring(end);
+                };
+                
+                reader.readAsDataURL(blob);
+                // 阻止預設行為，避免某些瀏覽器貼上兩次
+                e.preventDefault();
+            }
+        }
+    });
+
+    async function publishPost() {
+        // 這裡是你原本發佈到 GitHub 的邏輯 (需要 GitHub Token)
+        alert('請確保你已在此處整合 GitHub API 邏輯。\n目前圖片已成功轉為 Base64 插入內容中！');
+    }
+</script>
 </body>
 </html>
