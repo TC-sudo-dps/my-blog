@@ -3,177 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TC的部落格 | 個人誌</title>
+    <title>TC 的部落格 | 個人誌</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00d2ff;
             --secondary: #3a7bd5;
-            --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.7);
+            --bg: #0b1120;
+            --card: rgba(30, 41, 59, 0.6);
             --text: #f8fafc;
             --text-dim: #94a3b8;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; scroll-behavior: smooth; }
 
         body { 
             font-family: 'Noto Sans TC', sans-serif; 
             background: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            line-height: 1.6;
-            /* 動態背景光暈 */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 210, 255, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(58, 123, 213, 0.08) 0px, transparent 50%);
-            background-attachment: fixed;
+            overflow-x: hidden;
         }
 
-        /* 導覽列優化 */
+        /* --- 動態背景粒子效果 --- */
+        .background-animate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0b1120 100%);
+        }
+        .particle {
+            position: absolute; border-radius: 50%;
+            background: rgba(0, 210, 255, 0.2);
+            animation: float 20s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- 導覽列 --- */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 8%; 
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px); 
-            position: sticky; top: 0; z-index: 1000;
+            padding: 15px 8%; background: rgba(11, 17, 32, 0.8);
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .logo { 
-            font-weight: bold; font-size: 1.4rem; color: var(--primary); 
-            letter-spacing: 1px;
-        }
-        
+        .logo { font-weight: bold; font-size: 1.4rem; color: var(--primary); letter-spacing: 1px; }
         .nav-links { display: flex; gap: 25px; }
-        .nav-links a { 
-            color: var(--text-dim); text-decoration: none; transition: 0.3s; 
-            cursor: pointer; font-size: 0.95rem; font-weight: 500;
-        }
+        .nav-links a { color: var(--text-dim); text-decoration: none; transition: 0.3s; cursor: pointer; font-size: 0.95rem; }
         .nav-links a:hover { color: var(--primary); }
+
+        /* --- Header --- */
+        header { 
+            padding: 120px 20px; text-align: center; 
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.8), rgba(0, 210, 255, 0.7)); 
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+            margin-bottom: 50px;
+        }
+        header h1 { font-size: 3rem; margin: 0; animation: fadeIn 1s ease; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        header p { color: rgba(255,255,255,0.8); font-weight: 300; margin-top: 10px; }
+        
+        /* --- 文章列表 --- */
+        #post-list { 
+            width: 90%; max-width: 1000px; margin: 0 auto 80px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; 
+        }
+        .post-card {
+            background: var(--card); border-radius: 24px; padding: 35px;
+            text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .post-card:hover { transform: translateY(-12px); border-color: var(--primary); background: rgba(30, 41, 59, 0.9); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .tag { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: #fff; padding: 4px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; margin-bottom: 20px; display: inline-block; width: fit-content; }
+        .post-card h2 { margin: 0; font-size: 1.3rem; line-height: 1.4; }
+
+        /* --- 關於我區塊 --- */
+        #about {
+            width: 90%; max-width: 700px; margin: 100px auto;
+            background: rgba(30, 41, 59, 0.4); border-radius: 30px; padding: 60px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center; backdrop-filter: blur(8px);
+        }
+        .about-avatar {
+            width: 90px; height: 90px; background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 50%; margin: 0 auto 25px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: #fff; font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+        }
 
         /* 漢堡按鈕 */
         .burger { display: none; cursor: pointer; flex-direction: column; gap: 6px; }
-        .burger div { width: 28px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+        .burger div { width: 25px; height: 2px; background: var(--text); }
 
         @media (max-width: 768px) {
-            .nav-links {
-                display: none; position: absolute; top: 70px; right: 5%;
-                background: #1e293b; flex-direction: column; padding: 25px;
-                border-radius: 16px; width: 180px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-                border: 1px solid rgba(255,255,255,0.1);
-            }
-            .nav-links.active { display: flex; animation: slideIn 0.3s ease-out; }
+            .nav-links { display: none; }
             .burger { display: flex; }
+            header h1 { font-size: 2.2rem; }
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Header 視覺強化 */
-        header { 
-            padding: 100px 20px; text-align: center; 
-            background: linear-gradient(135deg, #1e3a8a, #00d2ff); 
-            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
-            margin-bottom: 40px;
-        }
-        header h1 { 
-            font-size: 2.8rem; margin: 0; letter-spacing: 2px; 
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            animation: fadeInDown 0.8s ease-out;
-        }
-        header p { opacity: 0.9; margin-top: 15px; font-weight: 300; }
-        #current-cat { font-weight: bold; color: #fff; background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 5px; }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 文章列表佈局 */
-        #post-list { 
-            width: 90%; max-width: 900px; margin: 0 auto 60px; 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; 
-        }
-        
-        /* 卡片玻璃擬態效果 */
-        .post-card {
-            background: var(--card); border-radius: 20px; padding: 30px;
-            text-decoration: none; color: inherit; 
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            display: flex; flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-        .post-card:hover { 
-            transform: translateY(-10px) scale(1.02); 
-            border-color: var(--primary);
-            background: rgba(30, 41, 59, 0.9);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .tag { 
-            background: linear-gradient(90deg, var(--primary), var(--secondary)); 
-            color: #fff; padding: 4px 12px; border-radius: 8px; 
-            font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; 
-            align-self: flex-start; text-transform: uppercase;
-        }
-
-        .post-card h2 { margin: 0; font-size: 1.4rem; transition: 0.3s; }
-        .post-card:hover h2 { color: var(--primary); }
-
-        /* 加載中動畫 (簡單示意) */
-        .loading-text { text-align: center; grid-column: 1/-1; color: var(--text-dim); }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+<div class="background-animate" id="bg-dots"></div>
+
 <nav>
     <div class="logo">TC BLOG</div>
-    <div class="burger" onclick="toggleMenu()">
-        <div></div><div></div><div></div>
-    </div>
+    <div class="burger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
     <div class="nav-links" id="navLinks">
         <a onclick="filterPosts('全部')">全部文章</a>
         <a onclick="filterPosts('技術')">技術</a>
         <a onclick="filterPosts('生活')">生活</a>
-        <a onclick="filterPosts('隨筆')">隨筆</a>
+        <a href="#about">關於我</a>
     </div>
 </nav>
 
 <header>
     <h1>TC 的部落格</h1>
-    <p>目前瀏覽：<span id="current-cat">全部</span></p>
+    <p>探索技術的深度，紀錄生活的溫度</p>
 </header>
 
-<div id="post-list">
-    <div class="loading-text">探索文章中...</div>
-</div>
+<div id="post-list"></div>
+
+<section id="about">
+    <div class="about-avatar">TC</div>
+    <h2>關於我</h2>
+    <p style="color: var(--text-dim); line-height: 1.8; font-size: 1rem;">
+        你好，我是 TC！<br>
+        這裡是我分享個人技術見解、學習筆記與生活趣事的小天地。<br>
+        我喜歡透過文字與程式碼，將複雜的事物變得簡單且有趣。
+    </p>
+</section>
 
 <script>
+    // 產生背景粒子
+    const bgContainer = document.getElementById('bg-dots');
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 4 + 2 + 'px';
+        p.style.width = size;
+        p.style.height = size;
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.animationDelay = Math.random() * 20 + 's';
+        p.style.animationDuration = (Math.random() * 8 + 12) + 's';
+        bgContainer.appendChild(p);
+    }
+
     let allPosts = [];
 
     function toggleMenu() {
-        document.getElementById('navLinks').classList.toggle('active');
+        const nav = document.getElementById('navLinks');
+        nav.style.display = (nav.style.display === 'flex') ? 'none' : 'flex';
+        if (nav.style.display === 'flex') {
+            nav.style.position = 'absolute';
+            nav.style.top = '70px';
+            nav.style.right = '8%';
+            nav.style.background = '#1e293b';
+            nav.style.padding = '20px';
+            nav.style.borderRadius = '12px';
+            nav.style.flexDirection = 'column';
+        }
     }
 
     async function loadPosts() {
         try {
             const res = await fetch('https://api.github.com/repos/TC-sudo-dps/my-blog/contents/posts');
             const files = await res.json();
-            
-            allPosts = []; // 清空緩存
+            allPosts = [];
             for (let file of files) {
                 if (file.name.endsWith('.md')) {
                     const postRes = await fetch(file.download_url);
                     const text = await postRes.text();
-                    
-                    // 解析 YAML 或 Markdown 標題
                     const catMatch = text.match(/category:\s*"(.*)"/) || text.match(/category:\s*(.*)/);
                     const titleMatch = text.match(/title:\s*"(.*)"/) || text.match(/#\s*(.*)/);
-                    
                     allPosts.push({
                         fileName: file.name,
                         title: titleMatch ? titleMatch[1] : file.name,
@@ -182,42 +190,25 @@
                 }
             }
             renderPosts('全部');
-        } catch (e) { 
-            console.error("加載失敗", e); 
-            document.getElementById('post-list').innerHTML = '<p style="text-align:center">文章載入失敗，請稍後再試。</p>';
-        }
+        } catch (e) { console.error("加載失敗", e); }
     }
 
     function renderPosts(category) {
         const list = document.getElementById('post-list');
-        const catLabel = document.getElementById('current-cat');
         list.innerHTML = '';
-        catLabel.innerText = category;
-
         const filtered = category === '全部' ? allPosts : allPosts.filter(p => p.category === category);
-        
-        if (filtered.length === 0) {
-            list.innerHTML = '<p class="loading-text">此分類目前沒有文章</p>';
-            return;
-        }
-
         filtered.forEach(p => {
             const card = document.createElement('a');
             card.className = 'post-card';
             card.href = `post.html?f=${encodeURIComponent(p.fileName)}`;
-            card.innerHTML = `
-                <span class="tag">${p.category}</span>
-                <h2>${p.title}</h2>
-            `;
+            card.innerHTML = `<span class="tag">${p.category}</span><h2>${p.title}</h2>`;
             list.appendChild(card);
         });
     }
 
     function filterPosts(cat) {
         renderPosts(cat);
-        if (window.innerWidth <= 768) {
-            document.getElementById('navLinks').classList.remove('active');
-        }
+        window.scrollTo({ top: document.getElementById('post-list').offsetTop - 100, behavior: 'smooth' });
     }
 
     loadPosts();
