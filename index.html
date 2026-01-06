@@ -154,10 +154,11 @@
                         }
                     }
 
-                    const card = document.createElement('a');
-                    card.className = 'post-card';
-                    card.href = `https://github.com/TC-sudo-dps/my-blog/blob/main/posts/${file.name}`;
-                    card.target = '_blank';
+                  const card = document.createElement('a');
+card.className = 'post-card';
+// 關鍵修改：連結到自己的 post.html，並把檔名傳過去
+card.href = `post.html?f=${encodeURIComponent(file.name)}`;
+card.target = '_self';
                     
                     card.innerHTML = `
                         <span class="post-date">${file.name.split('.')[0]}</span>
