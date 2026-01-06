@@ -1,0 +1,17 @@
+backend:
+  name: github
+  repo: TC-sudo-dps/my-blog # 這裡一定要改對
+  branch: main
+
+media_folder: "images" 
+public_folder: "/images"
+
+collections:
+  - name: "blog"
+    label: "我的文章"
+    folder: "posts" # 文章會存放在這裡
+    create: true
+    fields:
+      - {label: "標題", name: "title", widget: "string"}
+      - {label: "日期", name: "date", widget: "datetime"}
+      - {label: "內容", name: "body", widget: "markdown"}
