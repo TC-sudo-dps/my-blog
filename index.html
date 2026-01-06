@@ -3,59 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leon's Blog | 質感部落格</title>
+    <title>TC的部落格 | 個人誌</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00d2ff;
+            --secondary: #3a7bd5;
             --bg: #0f172a;
-            --card: #1e293b;
+            --card: rgba(30, 41, 59, 0.7);
             --text: #f8fafc;
+            --text-dim: #94a3b8;
         }
-        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
 
-        /* 導覽列與漢堡選單 */
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            line-height: 1.6;
+            /* 動態背景光暈 */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 210, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(58, 123, 213, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* 導覽列優化 */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%; background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000;
+            padding: 15px 8%; 
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px); 
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); }
+        .logo { 
+            font-weight: bold; font-size: 1.4rem; color: var(--primary); 
+            letter-spacing: 1px;
+        }
         
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { color: var(--text); text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { 
+            color: var(--text-dim); text-decoration: none; transition: 0.3s; 
+            cursor: pointer; font-size: 0.95rem; font-weight: 500;
+        }
         .nav-links a:hover { color: var(--primary); }
 
-        /* 漢堡按鈕 (手機端顯示) */
-        .burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
-        .burger div { width: 25px; height: 3px; background: var(--text); border-radius: 2px; }
+        /* 漢堡按鈕 */
+        .burger { display: none; cursor: pointer; flex-direction: column; gap: 6px; }
+        .burger div { width: 28px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
 
         @media (max-width: 768px) {
             .nav-links {
                 display: none; position: absolute; top: 70px; right: 5%;
-                background: var(--card); flex-direction: column; padding: 20px;
-                border-radius: 12px; width: 150px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+                background: #1e293b; flex-direction: column; padding: 25px;
+                border-radius: 16px; width: 180px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+                border: 1px solid rgba(255,255,255,0.1);
             }
-            .nav-links.active { display: flex; }
+            .nav-links.active { display: flex; animation: slideIn 0.3s ease-out; }
             .burger { display: flex; }
         }
 
-        header { padding: 80px 20px; text-align: center; background: linear-gradient(135deg, #3a7bd5, #00d2ff); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
-        #post-list { width: 90%; max-width: 800px; margin: 40px auto; display: grid; gap: 20px; }
-        
-        .post-card {
-            background: var(--card); border-radius: 16px; padding: 25px;
-            text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .post-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .tag { background: var(--primary); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+
+        /* Header 視覺強化 */
+        header { 
+            padding: 100px 20px; text-align: center; 
+            background: linear-gradient(135deg, #1e3a8a, #00d2ff); 
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+            margin-bottom: 40px;
+        }
+        header h1 { 
+            font-size: 2.8rem; margin: 0; letter-spacing: 2px; 
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s ease-out;
+        }
+        header p { opacity: 0.9; margin-top: 15px; font-weight: 300; }
+        #current-cat { font-weight: bold; color: #fff; background: rgba(0,0,0,0.2); padding: 2px 10px; border-radius: 5px; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 文章列表佈局 */
+        #post-list { 
+            width: 90%; max-width: 900px; margin: 0 auto 60px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; 
+        }
+        
+        /* 卡片玻璃擬態效果 */
+        .post-card {
+            background: var(--card); border-radius: 20px; padding: 30px;
+            text-decoration: none; color: inherit; 
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex; flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+        .post-card:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            border-color: var(--primary);
+            background: rgba(30, 41, 59, 0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tag { 
+            background: linear-gradient(90deg, var(--primary), var(--secondary)); 
+            color: #fff; padding: 4px 12px; border-radius: 8px; 
+            font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; 
+            align-self: flex-start; text-transform: uppercase;
+        }
+
+        .post-card h2 { margin: 0; font-size: 1.4rem; transition: 0.3s; }
+        .post-card:hover h2 { color: var(--primary); }
+
+        /* 加載中動畫 (簡單示意) */
+        .loading-text { text-align: center; grid-column: 1/-1; color: var(--text-dim); }
+
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">LEON BLOG</div>
+    <div class="logo">TC BLOG</div>
     <div class="burger" onclick="toggleMenu()">
         <div></div><div></div><div></div>
     </div>
@@ -68,11 +144,13 @@
 </nav>
 
 <header>
-    <h1>我的數位花園</h1>
-    <p>分類：<span id="current-cat">全部</span></p>
+    <h1>TC 的部落格</h1>
+    <p>目前瀏覽：<span id="current-cat">全部</span></p>
 </header>
 
-<div id="post-list"></div>
+<div id="post-list">
+    <div class="loading-text">探索文章中...</div>
+</div>
 
 <script>
     let allPosts = [];
@@ -86,12 +164,13 @@
             const res = await fetch('https://api.github.com/repos/TC-sudo-dps/my-blog/contents/posts');
             const files = await res.json();
             
+            allPosts = []; // 清空緩存
             for (let file of files) {
                 if (file.name.endsWith('.md')) {
                     const postRes = await fetch(file.download_url);
                     const text = await postRes.text();
                     
-                    // 解析分類與標題 (YAML Front Matter)
+                    // 解析 YAML 或 Markdown 標題
                     const catMatch = text.match(/category:\s*"(.*)"/) || text.match(/category:\s*(.*)/);
                     const titleMatch = text.match(/title:\s*"(.*)"/) || text.match(/#\s*(.*)/);
                     
@@ -103,7 +182,10 @@
                 }
             }
             renderPosts('全部');
-        } catch (e) { console.error("加載失敗", e); }
+        } catch (e) { 
+            console.error("加載失敗", e); 
+            document.getElementById('post-list').innerHTML = '<p style="text-align:center">文章載入失敗，請稍後再試。</p>';
+        }
     }
 
     function renderPosts(category) {
@@ -114,13 +196,18 @@
 
         const filtered = category === '全部' ? allPosts : allPosts.filter(p => p.category === category);
         
+        if (filtered.length === 0) {
+            list.innerHTML = '<p class="loading-text">此分類目前沒有文章</p>';
+            return;
+        }
+
         filtered.forEach(p => {
             const card = document.createElement('a');
             card.className = 'post-card';
             card.href = `post.html?f=${encodeURIComponent(p.fileName)}`;
             card.innerHTML = `
                 <span class="tag">${p.category}</span>
-                <h2 style="margin:5px 0">${p.title}</h2>
+                <h2>${p.title}</h2>
             `;
             list.appendChild(card);
         });
@@ -128,7 +215,9 @@
 
     function filterPosts(cat) {
         renderPosts(cat);
-        if (window.innerWidth <= 768) toggleMenu(); // 手機選完後自動關閉選單
+        if (window.innerWidth <= 768) {
+            document.getElementById('navLinks').classList.remove('active');
+        }
     }
 
     loadPosts();
