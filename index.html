@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的個人網站</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        header { border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .post { margin-bottom: 40px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .admin-link { color: #666; font-size: 0.8em; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>歡迎來到我的空間</h1>
+        <p>這裡是我的文章發布地</p>
+        <a href="./admin/" class="admin-link">管理者登入</a>
+    </header>
+
+    <main id="content">
+        <p>正在載入文章...</p>
+    </main>
+
+    <script>
+        // 這段小程式碼會幫你處理登入後的導向
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
