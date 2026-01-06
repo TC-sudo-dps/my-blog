@@ -3,177 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leon's Blog | 個人隨筆</title>
+    <title>Leon's Blog | 質感部落格</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #00d2ff;
-            --secondary-color: #3a7bd5;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --primary: #00d2ff;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+        }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+
+        /* 導覽列與漢堡選單 */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); }
+        
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: var(--text); text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* 漢堡按鈕 (手機端顯示) */
+        .burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .burger div { width: 25px; height: 3px; background: var(--text); border-radius: 2px; }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; position: absolute; top: 70px; right: 5%;
+                background: var(--card); flex-direction: column; padding: 20px;
+                border-radius: 12px; width: 150px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            }
+            .nav-links.active { display: flex; }
+            .burger { display: flex; }
         }
 
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        header {
-            width: 100%;
-            padding: 60px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            opacity: 0.9;
-            margin-top: 10px;
-        }
-
-        #post-list {
-            width: 90%;
-            max-width: 800px;
-            display: grid;
-            gap: 25px;
-            padding-bottom: 50px;
-        }
-
+        header { padding: 80px 20px; text-align: center; background: linear-gradient(135deg, #3a7bd5, #00d2ff); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+        #post-list { width: 90%; max-width: 800px; margin: 40px auto; display: grid; gap: 20px; }
+        
         .post-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-decoration: none;
-            color: inherit;
-            display: block;
+            background: var(--card); border-radius: 16px; padding: 25px;
+            text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
         }
-
-        .post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-color: var(--primary-color);
-        }
-
-        .post-date {
-            font-size: 0.85rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .post-title {
-            font-size: 1.5rem;
-            margin: 0 0 15px 0;
-            line-height: 1.3;
-        }
-
-        .post-preview {
-            color: var(--text-muted);
-            font-size: 1rem;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 50px;
-        }
-
-        /* 響應式調整 */
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.8rem; }
-            .post-card { padding: 20px; }
-        }
+        .post-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .tag { background: var(--primary); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; display: inline-block; }
     </style>
 </head>
 <body>
 
+<nav>
+    <div class="logo">LEON BLOG</div>
+    <div class="burger" onclick="toggleMenu()">
+        <div></div><div></div><div></div>
+    </div>
+    <div class="nav-links" id="navLinks">
+        <a onclick="filterPosts('全部')">全部文章</a>
+        <a onclick="filterPosts('技術')">技術</a>
+        <a onclick="filterPosts('生活')">生活</a>
+        <a onclick="filterPosts('隨筆')">隨筆</a>
+    </div>
+</nav>
+
 <header>
-    <h1>Leon's Creative Space</h1>
-    <p>探索技術、生活與無限可能</p>
+    <h1>我的數位花園</h1>
+    <p>分類：<span id="current-cat">全部</span></p>
 </header>
 
-<div id="post-list">
-    <div class="loading">正在抓取最新文章...</div>
-</div>
+<div id="post-list"></div>
 
 <script>
+    let allPosts = [];
+
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('active');
+    }
+
     async function loadPosts() {
-        const container = document.getElementById('post-list');
         try {
-            // 注意：這裡請確保你的 GitHub 帳號與倉庫名正確
-            const response = await fetch('https://api.github.com/repos/TC-sudo-dps/my-blog/contents/posts');
-            if (!response.ok) throw new Error();
-
-            const files = await response.json();
-            container.innerHTML = '';
-
-            // 按照檔案名稱（日期）反向排序，讓新文章在上面
-            files.reverse();
-
+            const res = await fetch('https://api.github.com/repos/TC-sudo-dps/my-blog/contents/posts');
+            const files = await res.json();
+            
             for (let file of files) {
                 if (file.name.endsWith('.md')) {
-                    const res = await fetch(file.download_url);
-                    const text = await res.text();
+                    const postRes = await fetch(file.download_url);
+                    const text = await postRes.text();
                     
-                    // 解析 Markdown (簡單抓取標題和預覽文字)
-                    const lines = text.split('\n');
-                    let title = "未命名文章";
-                    let preview = "";
-
-                    for(let line of lines) {
-                        const cleanLine = line.replace(/#|title:|---|"/g, '').trim();
-                        if (cleanLine && title === "未命名文章") {
-                            title = cleanLine;
-                        } else if (cleanLine && preview.length < 100) {
-                            preview += cleanLine + " ";
-                        }
-                    }
-
-                  const card = document.createElement('a');
-card.className = 'post-card';
-// 關鍵修改：連結到自己的 post.html，並把檔名傳過去
-card.href = `post.html?f=${encodeURIComponent(file.name)}`;
-card.target = '_self';
+                    // 解析分類與標題 (YAML Front Matter)
+                    const catMatch = text.match(/category:\s*"(.*)"/) || text.match(/category:\s*(.*)/);
+                    const titleMatch = text.match(/title:\s*"(.*)"/) || text.match(/#\s*(.*)/);
                     
-                    card.innerHTML = `
-                        <span class="post-date">${file.name.split('.')[0]}</span>
-                        <h2 class="post-title">${title}</h2>
-                        <div class="post-preview">${preview}</div>
-                    `;
-                    container.appendChild(card);
+                    allPosts.push({
+                        fileName: file.name,
+                        title: titleMatch ? titleMatch[1] : file.name,
+                        category: catMatch ? catMatch[1].trim() : "隨筆"
+                    });
                 }
             }
-        } catch (error) {
-            container.innerHTML = '<p class="loading">目前還沒有文章，快去後台發布第一篇吧！</p>';
-        }
+            renderPosts('全部');
+        } catch (e) { console.error("加載失敗", e); }
     }
+
+    function renderPosts(category) {
+        const list = document.getElementById('post-list');
+        const catLabel = document.getElementById('current-cat');
+        list.innerHTML = '';
+        catLabel.innerText = category;
+
+        const filtered = category === '全部' ? allPosts : allPosts.filter(p => p.category === category);
+        
+        filtered.forEach(p => {
+            const card = document.createElement('a');
+            card.className = 'post-card';
+            card.href = `post.html?f=${encodeURIComponent(p.fileName)}`;
+            card.innerHTML = `
+                <span class="tag">${p.category}</span>
+                <h2 style="margin:5px 0">${p.title}</h2>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function filterPosts(cat) {
+        renderPosts(cat);
+        if (window.innerWidth <= 768) toggleMenu(); // 手機選完後自動關閉選單
+    }
+
     loadPosts();
 </script>
-
 </body>
 </html>
